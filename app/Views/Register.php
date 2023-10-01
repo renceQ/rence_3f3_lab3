@@ -84,7 +84,7 @@
                         <input type="password" name="confirmpassword" placeholder="Confirm Password" class="form-control">
                     </div>
                     <div class="d-grid" mt-3>
-                        <button type="submit" class="neomorphic-btn">Signup</button>
+                        <button type="submit" class="neomorphic-btn">Save Account</button>
                         <br>
                         <a href="/" class="neomorphic-btn" style="width: auto; text-align: center;">Login Account</a>
                     </div>
