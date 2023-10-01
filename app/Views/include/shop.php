@@ -31,6 +31,17 @@
             background-color: #ff0000; /* Red background on hover */
             color: #fff; /* White text on hover */
         }
+
+        .product-list {
+            display: flex; /* Use flexbox layout */
+            flex-wrap: wrap; /* Allow items to wrap to the next row */
+        }
+
+        .product-list-item {
+            width: calc(33.33% - 10px); /* 3 columns with some margin in between */
+            margin-right: 10px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -41,79 +52,62 @@
             <button id="mensButton" class="category-button">Men's</button>
         </div>
 
-        <!-- Add containers for each category -->
-        <div id="womenContainer"></div>
-        <div id="accessoriesContainer"></div>
-        <div id="mensContainer"></div>
+        <!-- Add a single container for each category -->
+        <div id="productContainer" class="product-list"></div>
     </div>
 
-<script>
-    // Get references to the buttons and containers
-    const womenButton = document.getElementById('womenButton');
-    const accessoriesButton = document.getElementById('accessoriesButton');
-    const mensButton = document.getElementById('mensButton');
+    <script>
+        // Get references to the buttons and the product container
+        const womenButton = document.getElementById('womenButton');
+        const accessoriesButton = document.getElementById('accessoriesButton');
+        const mensButton = document.getElementById('mensButton');
 
-    const womenContainer = document.getElementById('womenContainer');
-    const accessoriesContainer = document.getElementById('accessoriesContainer');
-    const mensContainer = document.getElementById('mensContainer');
+        const productContainer = document.getElementById('productContainer');
 
-    // Function to hide all category containers except the specified one
-    function hideOtherContainers(activeContainer) {
-        const containers = [womenContainer, accessoriesContainer, mensContainer];
-        containers.forEach(container => {
-            if (container !== activeContainer) {
-                container.style.display = 'none';
-            }
+        // Function to hide all category containers except the specified one
+        function hideOtherContainers() {
+            productContainer.innerHTML = '';
+        }
+
+        // Add event listeners for button clicks
+        womenButton.addEventListener('click', () => {
+            hideOtherContainers();
+            loadAndDisplayCategory(2, productContainer);
         });
-    }
 
-    // Add event listeners for button clicks
-    womenButton.addEventListener('click', () => {
-        hideOtherContainers(womenContainer);
-        loadAndDisplayCategory(2, womenContainer);
-    });
+        accessoriesButton.addEventListener('click', () => {
+            hideOtherContainers();
+            loadAndDisplayCategory(3, productContainer);
+        });
 
-    accessoriesButton.addEventListener('click', () => {
-        hideOtherContainers(accessoriesContainer);
-        loadAndDisplayCategory(3, accessoriesContainer);
-    });
+        mensButton.addEventListener('click', () => {
+            hideOtherContainers();
+            loadAndDisplayCategory(4, productContainer);
+        });
 
-    mensButton.addEventListener('click', () => {
-        hideOtherContainers(mensContainer);
-        loadAndDisplayCategory(4, mensContainer);
-    });
-
-    // Function to load and display records for a specific category
-    function loadAndDisplayCategory(categoryId, container) {
-        // Use AJAX to fetch records based on categoryId and update the container
-        fetch(`/get-products-by-category/${categoryId}`)
-            .then(response => response.json())
-            .then(products => {
-                // Clear the container
-                container.innerHTML = '';
-
-                // Loop through the products and add them to the container
-                products.forEach(product => {
-                    const productDiv = document.createElement('div');
-										productDiv.innerHTML = `
-				    <p>Product Name: ${product.product_name}</p>
-				    <p>Price: ${product.price}</p>
-				    <img src="/uploads/${product.image_filename}" alt="Product Image" />
-				    <!-- Add more fields as needed -->
-				`;
-
-                    container.appendChild(productDiv);
+        function loadAndDisplayCategory(categoryId, container) {
+            // Use AJAX to fetch records based on categoryId and update the container
+            fetch(`/get-products-by-category/${categoryId}`)
+                .then(response => response.json())
+                .then(products => {
+                    // Loop through the products and add them to the list
+                    products.forEach(product => {
+                        const productDiv = document.createElement('div');
+                        productDiv.classList.add('product-list-item');
+                        productDiv.innerHTML = `
+                            <p>Product Name: ${product.product_name}</p>
+                            <p>Price: ${product.price}</p>
+                            <img src="${product.image_url}" alt="Product Image" width="150" />
+                            <!-- Add more fields as needed -->
+                        `;
+                        container.appendChild(productDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+                    container.innerHTML = 'Failed to load products.';
                 });
-
-                // Show the container after loading products
-                container.style.display = 'block';
-            })
-            .catch(error => {
-                console.error(error);
-                container.innerHTML = 'Failed to load products.';
-            });
-    }
-</script>
-
-  </body>
+        }
+    </script>
+</body>
 </html>

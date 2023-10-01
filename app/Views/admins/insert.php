@@ -52,6 +52,12 @@
         .compact-table {
             font-size: 14px;
         }
+
+        /* Add scrollbar to the table container */
+        .table-container {
+            max-height: 300px; /* Set the max height you desire */
+            overflow: auto;
+        }
     </style>
 </head>
 <body>
@@ -85,6 +91,7 @@
     <div class="container" style="width: 700px;">
         <h2>Products Table</h2>
         <table class="table table-striped table-bordered compact-table">
+            <!-- Table header outside the scrollable container -->
             <thead>
                 <tr>
                     <th>Product Name</th>
@@ -94,24 +101,29 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-                <?php foreach ($products as $product): ?>
-                    <tr data-product-id="<?= $product['id'] ?>">
-                        <td><?= $product['product_name'] ?></td>
-                        <td><?= $product['price'] ?></td>
-                        <td><?= $product['category_id'] ?></td>
-                        <td><img src="<?= base_url() . '/' . $product['image_url'] ?>" alt="Product Image" width="50"></td>
-                        <td>
-                            <button class="btn btn-danger" onclick="deleteProduct(<?= $product['id'] ?>)">Delete</button>
-                            <a class="btn btn-warning" href="/update/<?= $product['id'] ?>">Update</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
         </table>
+        <!-- Wrap the table body in a div with scrollbar -->
+        <div class="table-container">
+            <table class="table table-striped table-bordered compact-table">
+                <tbody>
+                    <?php foreach ($products as $product): ?>
+                        <tr data-product-id="<?= $product['id'] ?>">
+                            <td><?= $product['product_name'] ?></td>
+                            <td><?= $product['price'] ?></td>
+                            <td><?= $product['category_id'] ?></td>
+                            <td><img src="<?= base_url() . '/' . $product['image_url'] ?>" alt="Product Image" width="50"></td>
+                            <td>
+                                <button class="btn btn-danger" onclick="deleteProduct(<?= $product['id'] ?>)">Delete</button>
+                                <a class="btn btn-warning" href="/update/<?= $product['id'] ?>">Update</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Add this script at the end of your HTML file, just before the closing </body> tag -->
+    <!-- JavaScript for deleting products -->
     <script>
         function deleteProduct(productId) {
             if (confirm("Are you sure you want to delete this product?")) {

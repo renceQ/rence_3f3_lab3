@@ -35,11 +35,9 @@
 										<li><a href="#">Spanish</a></li>
 									</ul>
 								</li>
-								<li>
-								<a href=" <?php echo base_url('/')?>">
+								<a href=" <?php echo base_url('/')?>" style="margin-left: 20px; color: white;">
 									Logout
 								</a>
-							</li>
 								<li class="account">
 									<a href="#">
 										<i class="fa fa-angle-down"></i>
